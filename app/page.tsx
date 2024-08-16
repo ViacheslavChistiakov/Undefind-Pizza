@@ -1,4 +1,4 @@
-import { Container, Filters, ProductCard, Title, TopBar } from "@/components/shared";
+import { Container, Filters, ProductCard, ProductListGroup, Title, TopBar } from "@/components/shared";
 
 
 
@@ -12,7 +12,7 @@ export default function Home() {
       </Container>
       <TopBar />
       <Container className="mt-10 pb-14">
-          <div className="flex gap-[60px]">
+          <div className="flex gap-[80px]">
               {/* {Filtr} */}
               <div className="w-[250px]">
                     <Filters />
@@ -20,7 +20,94 @@ export default function Home() {
               {/* {ListOfProducts} */}
               <div className="flex-1">
                   <div className="flex flex-col gap-16">
-                    <ProductCard id={1} name={"Cheese Chicken"} price={10} imageUrl={"https://media.dodostatic.net/image/r:292x292/11EE7D614CBE0530B7234B6D7A6E5F8E.avif"} />
+                    <ProductListGroup title="Pizzas" items={[
+                        {
+                        id: 1,
+                        name: "Cheese Pizza",
+                        imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                        price: 10,
+                        items: [{price: 10}]
+                        },
+                        {
+                            id: 2,
+                            name: "Cheese Pizza",
+                            imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                            price: 10,
+                            items: [{price: 10}]
+                            },
+                            {
+                                id: 3,
+                                name: "Cheese Pizza",
+                                imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                                price: 10,
+                                items: [{price: 10}]
+                                },
+                                {
+                                    id: 4,
+                                    name: "Cheese Pizza",
+                                    imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                                    price: 10,
+                                    items: [{price: 10}]
+                                    },
+                                    {
+                                        id: 5,
+                                        name: "Cheese Pizza",
+                                        imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                                        price: 10,
+                                        items: [{price: 10}]
+                                        },
+                                        {
+                                            id: 6,
+                                            name: "Cheese Pizza",
+                                            imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                                            price: 10,
+                                            items: [{price: 10}]
+                                            },
+                ]} categoryId={1} />
+                <ProductListGroup title="Combo" items={[
+                        {
+                        id: 1,
+                        name: "Cheese Pizza",
+                        imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                        price: 10,
+                        items: [{price: 10}]
+                        },
+                        {
+                            id: 2,
+                            name: "Cheese Pizza",
+                            imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                            price: 10,
+                            items: [{price: 10}]
+                            },
+                            {
+                                id: 3,
+                                name: "Cheese Pizza",
+                                imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                                price: 10,
+                                items: [{price: 10}]
+                                },
+                                {
+                                    id: 4,
+                                    name: "Cheese Pizza",
+                                    imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                                    price: 10,
+                                    items: [{price: 10}]
+                                    },
+                                    {
+                                        id: 5,
+                                        name: "Cheese Pizza",
+                                        imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                                        price: 10,
+                                        items: [{price: 10}]
+                                        },
+                                        {
+                                            id: 6,
+                                            name: "Cheese Pizza",
+                                            imageUrl: "https://media.dodostatic.net/image/r:292x292/11EE7D610D2925109AB2E1C92CC5383C.avif",
+                                            price: 10,
+                                            items: [{price: 10}]
+                                            },
+                ]} categoryId={2} />
                   </div>
               </div>
           </div>
