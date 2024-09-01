@@ -1,15 +1,13 @@
 'use client'
 
-import React, { useEffect } from 'react';
 import { Title } from './title';
-import { FilterCheckbox } from './filter-checkbox';
 import { Input } from '../ui/input';
 import { RangeSlider } from './range-slider';
 import { CheckboxFiltersGroup } from './checkbox-filters-group';
-import { useFilterIngredients } from '@/app/hooks/useFilterIngredients';
-import { useSet } from 'react-use';
-import qs from 'qs';
-import { useRouter } from 'next/navigation';
+import { useFilters, useIngredients, useQueryFilters } from '@/app/hooks';
+
+
+
 
 
 
@@ -17,45 +15,35 @@ interface Props {
     className?: string
 }
 
-interface PriceProps {
-  priceFrom?: number,
-  priceTo?: number
-}
+
+
 
 export const Filters: React.FC<Props> = ({className}) => {
+
+  const {ingredients, loading} = useIngredients();
+  const filters = useFilters();
   
-  const router = useRouter();
+  useQueryFilters(filters);
 
-  const { ingredients, loading, onAddId, selectedIngredients } = useFilterIngredients();
-  const [prices, setPrice] = React.useState<PriceProps>({});
-  const [sizes, { toggle: toggleSizes }] = useSet(new Set<String>([]));
-  const [pizzaTypes, { toggle: togglePizaaTypes }] = useSet(new Set<String>([]));
-  const items = ingredients.map((item) => ({value: String(item.id), text: item.name}))
 
-  const updatetPrice = (name: keyof PriceProps, value: number ) => {
-    setPrice({
-      ...prices,
-      [name]: value
-    })
+
+
+  
+ 
+  const items = ingredients.map((item) => ({value: String(item.id), text: item.name}));
+
+
+  const updatePrices = (prices: number[]) => {
+    filters.setPrices('priceFrom', prices[0]);
+    filters.setPrices('priceTo', prices[1]);
   }
+  
+
 
 
   
-  React.useEffect(() => {
-    const filters = {
-      ...prices,
-      pizzaTypes: Array.from(pizzaTypes),
-      sizes: Array.from(sizes),
-      ingredients: Array.from(selectedIngredients)
-    };
-    const query = qs.stringify(filters, {
-      arrayFormat: 'comma',
-    });
-      // console.log(qs.stringify(filters, {
-      //   arrayFormat: 'comma',
-      // }));
-    router.push(`?${query}`)
-  }, [prices, pizzaTypes, sizes, selectedIngredients, router])
+
+  
 
 
   return (
@@ -66,26 +54,24 @@ export const Filters: React.FC<Props> = ({className}) => {
         title="Type of dough"
         name="pizzaTypes"
         className="mb-5"
-        onClickCheckBox={togglePizaaTypes}
-        selected={pizzaTypes}
+        onClickCheckBox={filters.setPizzaTypes}
+        selected={filters.pizzaTypes}
         items={[
           { text: 'Slim', value: '1' },
           { text: 'Traditional', value: '2' },
-        ]}
-      />
+        ]} defaultItems={[]}      />
 
   <CheckboxFiltersGroup
         title="Sizes"
         name="sizes"
         className="mb-5"
-        onClickCheckBox={toggleSizes}
-        selected={sizes}
+        onClickCheckBox={filters.setSizes}
+        selected={filters.sizes}
         items={[
           { text: '20 sm', value: '20' },
           { text: '30 sm', value: '30' },
           { text: '40 sm', value: '40' },
-        ]}
-      />
+        ]} defaultItems={[]}      />
           {/* {Filter of price} */}
         <div className="mt-5 border-y border-y-neutral-100 py-6 pb-7">
               <p className="font-bold mb-3">Price til until:</p>
@@ -93,21 +79,21 @@ export const Filters: React.FC<Props> = ({className}) => {
                   <Input type="number"
                    placeholder="0" min={0}
                     max={80} 
-                    value={String(prices.priceFrom)}
-                    onChange={(e) => updatetPrice('priceFrom', Number(e.target.value))}
+                    value={String(filters.prices.priceFrom)}
+                    onChange={(e) => filters.setPrices('priceFrom', Number(e.target.value))}
                      />
                   <Input type="number"
                    min={8} max={80} 
                    placeholder="100" 
-                   value={String(prices.priceTo)}
-                   onChange={(e) => updatetPrice('priceTo', Number(e.target.value))}
+                   value={String(filters.prices.priceTo)}
+                   onChange={(e) => filters.setPrices('priceTo', Number(e.target.value))}
                    />
               </div>
               <RangeSlider min={0} max={100} step={5} value={[
-                prices.priceFrom || 0,
-                prices.priceTo || 100
+                filters.prices.priceFrom || 0,
+                filters.prices.priceTo || 100
               ]}
-              onValueChange={([priceFrom, priceTo]) => setPrice({priceFrom, priceTo})}
+              onValueChange={updatePrices}
                />
         </div>
 
@@ -119,8 +105,8 @@ export const Filters: React.FC<Props> = ({className}) => {
           defaultItems={items.slice(0, 6)}
           items={items}
           loading={loading}
-          onClickCheckBox={onAddId}
-          selected={selectedIngredients}
+          onClickCheckBox={filters.setSelectedIngredients}
+          selected={filters.selectedIngredients}
         />
     </div>
   )
