@@ -10,4 +10,6 @@ export { RangeSlider } from './range-slider';
 export { CheckboxFiltersGroup } from './checkbox-filters-group';
 export { ProductCard } from './product-card';
 export { ProductListGroup } from './product-group-list';
-export { SearchInput } from './search-input'
+export { SearchInput } from './search-input';
+export { ProductImageUrl } from './productImageUrl'
+
