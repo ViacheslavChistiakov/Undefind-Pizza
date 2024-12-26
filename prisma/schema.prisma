@@ -41,7 +41,7 @@ model Product {
   name      String
   imageUrl  String
 
-  ingridients Ingridient[]
+  ingredients Ingredient[]
   items ProductItem[]
 
 
@@ -66,17 +66,20 @@ model ProductItem {
   productId Int
 }
 
-model Ingridient {
+model Ingredient {
     id        Int      @id @default(autoincrement())
     name  String
     price Int 
     imageUrl  String
 
     products  Product[]
-    cartItems CartItem[]   
+    cartItems CartItem[] @relation("IngredientCartItems")
+    CartItem CartItem[] @relation("IngredientCartItem")
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+
 }
 
 model Cart {
@@ -108,9 +111,11 @@ model CartItem {
    productItemId Int
 
 
-   quanity  Int
+   quanity  Int @default(1)
 
-   ingridients  Ingridient[]
+
+   ingredients  Ingredient[] @relation("IngredientCartItems")
+   ingredientCartItems Ingredient[] @relation("IngredientCartItem")
 
    createdAt DateTime @default(now())
    updatedAt DateTime @updatedAt

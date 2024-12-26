@@ -1,6 +1,7 @@
 import { Container, Filters, ProductCard, ProductListGroup, Title, TopBar } from "@/shared/components/shared";
 import { prisma } from "@/prisma/prisma-client";
 import { Key } from "lucide-react";
+import { Suspense } from "react";
 
 
 
@@ -13,14 +14,12 @@ export default async function Home() {
       include: {
         products: {
             include: {
-                ingridients: true,
+                ingredients: true,
                 items: true,
             }
         }
       }
     });
-
-    console.log(categories);
 
   return <>
       <Container className="mt-10">
@@ -31,7 +30,9 @@ export default async function Home() {
           <div className="flex gap-[80px]">
               {/* {Filtr} */}
               <div className="w-[250px]">
-                    <Filters />
+                    <Suspense>
+                        <Filters />
+                    </Suspense>
               </div>
               {/* {ListOfProducts} */}
               <div className="flex-1">

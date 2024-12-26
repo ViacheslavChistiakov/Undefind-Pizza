@@ -1,5 +1,4 @@
-import { useRouter, useSearchParams } from "next/navigation";
-import { useFilterIngredients } from "./use-filter-Ingredients";
+import {  useSearchParams } from "next/navigation";
 import { useSet } from "react-use";
 import React from "react";
 

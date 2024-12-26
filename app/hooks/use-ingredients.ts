@@ -1,9 +1,9 @@
 import { Api } from "@/shared/services/api-client";
-import { Ingridient } from "@prisma/client"
+import { Ingredient } from "@prisma/client"
 import React from "react"
 
 export const useIngredients = () => {
-    const [ingredients, setIngredients] = React.useState<Ingridient[]>([]);
+    const [ingredients, setIngredients] = React.useState<Ingredient[]>([]);
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {

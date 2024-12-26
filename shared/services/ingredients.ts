@@ -1,8 +1,8 @@
 
 import { axiosInstance } from "./instance"
 import { ApiRoutes } from "./constanst"
-import { Ingridient } from "@prisma/client"
+import { Ingredient } from "@prisma/client"
 
-export const getAll = async (): Promise<Ingridient[]> => {
-    return (await axiosInstance.get<Ingridient[]>(ApiRoutes.INGREDIENTS)).data
+export const getAll = async (): Promise<Ingredient[]> => {
+    return (await axiosInstance.get<Ingredient[]>(ApiRoutes.INGREDIENTS)).data
 }

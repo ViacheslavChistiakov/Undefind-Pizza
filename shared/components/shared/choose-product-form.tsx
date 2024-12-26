@@ -2,22 +2,25 @@ import { cn } from '@/shared/lib/utils';
 import React from 'react'
 import { Title } from './title';
 import { Button } from '../ui';
+import { loadBindings } from 'next/dist/build/swc';
 
-type Props = {
+interface Props  {
     imageUrl: string;
     name: string;
-    items?:  any[];
+    price: number,
+    loading?: boolean;
+    onSubmit?: VoidFunction;
     className?: string,
 }
 
 export const ChooseProductForm: React.FC<Props> = ({ 
     name,
-    items,
+    loading,
+    price,
+    onSubmit,
     imageUrl,
     className,
  }) => {
-    const textDetails = "30 sm traditional dough";
-    const totalPrice = 100
 
   return (
     <div className={cn(className, 'flex flex-1')}>
@@ -30,9 +33,9 @@ export const ChooseProductForm: React.FC<Props> = ({
     </div> 
         <div className="w-[490px] bg-[#f7f6f5] p-7">
                 <Title text={name} className="font-extrabold mb-1" />
-                <p className="text-gray-400">{textDetails}</p>
-            <Button className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
-                Add to basket for {totalPrice} $
+
+            <Button loading={loading} onClick={() => onSubmit?.()}  className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
+                Add to basket for {price} $
             </Button>
         </div>
     </div>
