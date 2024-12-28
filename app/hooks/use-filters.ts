@@ -43,10 +43,10 @@ export const useFilters = (): ReturnProps => {
     );
 
     const [sizes, { toggle: toggleSizes }] = useSet(
-        new Set<string>(searchParams.get('sizes') ? searchParams.get('sizes')?.split(',') : [])
+        new Set<string>(searchParams.has('sizes') ? searchParams.get('sizes')?.split(',') : [])
     );
     const [pizzaTypes, { toggle: togglePizaaTypes }] = useSet(
-        new Set<string>(searchParams.get('pizzaTypes') ? searchParams.get('pizzaTypes')?.split(',') : [])
+        new Set<string>(searchParams.has('pizzaTypes') ? searchParams.get('pizzaTypes')?.split(',') : [])
     );
 
     const [prices, setPrices] = React.useState<PriceProps>({
@@ -62,7 +62,7 @@ export const useFilters = (): ReturnProps => {
       };
 
 
-    return {
+    return React.useMemo(() => ({
         sizes,
         pizzaTypes,
         prices,
@@ -71,6 +71,6 @@ export const useFilters = (): ReturnProps => {
         setPizzaTypes: togglePizaaTypes,
         setSizes: toggleSizes,
         setSelectedIngredients: toggleIngredients
-    }
+    }), [sizes, pizzaTypes, prices, selectedIngredients])
 
 }

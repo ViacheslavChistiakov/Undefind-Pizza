@@ -59,7 +59,8 @@ export const Filters: React.FC<Props> = ({className}) => {
         items={[
           { text: 'Slim', value: '1' },
           { text: 'Traditional', value: '2' },
-        ]} defaultItems={[]}      />
+        ]}    />
+
 
   <CheckboxFiltersGroup
         title="Sizes"
@@ -71,7 +72,7 @@ export const Filters: React.FC<Props> = ({className}) => {
           { text: '20 sm', value: '20' },
           { text: '30 sm', value: '30' },
           { text: '40 sm', value: '40' },
-        ]} defaultItems={[]}      />
+        ]} />
           {/* {Filter of price} */}
         <div className="mt-5 border-y border-y-neutral-100 py-6 pb-7">
               <p className="font-bold mb-3">Price til until:</p>
@@ -108,6 +109,8 @@ export const Filters: React.FC<Props> = ({className}) => {
           onClickCheckBox={filters.setSelectedIngredients}
           selected={filters.selectedIngredients}
         />
+
     </div>
   )
+
 }
