@@ -3,19 +3,23 @@
 import React, { useEffect } from 'react';
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/shared/components/ui/sheet';
+import Image from 'next/image'
 import Link from 'next/link';
 import { Button } from '../ui';
-import { ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { CartDrawerItem } from './cart-drawer-item';
 import { getCartItemDetails } from '@/shared/lib';
 import { useCartStore } from '@/shared/store';
 import { PizzaSize, PizzaType } from '@/shared/constants/pizza';
+import { Title } from './title';
+import { cn } from '@/shared/lib/utils';
 
 type Props = {
   className?: string;
@@ -44,13 +48,37 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ className
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent className="flex flex-col justify-between pb-0 bg-[#F4F1EE] ">
-        <SheetHeader>
+      <div className={cn("flex flex-col h-full", !totalAmount && 'justify-center')}>  
+        {
+          totalAmount > 0 && (
+            <SheetHeader>
           <SheetTitle>
             In Cart <span className="font-bold">{cartItems.length}</span>
           </SheetTitle>
         </SheetHeader>
+          )
+        }
 
-        <div className="-mx-6 mt-5 overflow-auto flex-1">
+        {!totalAmount && (
+          <div className="flex flex-col items-center justify-center w-72 mx-auto">
+              <Image src="/assets/empty-box.png" alt="Empty box" width={120} height={120} />
+              <Title size="sm" text="Cart is empty" className="text-center font-bold my-2" />
+              <p className="text-center text-neutral-500 mb-5">
+                Choose something from menu
+              </p>
+              <SheetClose>
+                <Button type="button" className="w-56 h-12 text-base" size="lg">
+                  <ArrowLeft className="w-5 mr-2" />
+                  Back to menu
+                </Button>
+              </SheetClose>
+          </div>
+        )}
+
+       {
+        totalAmount > 0 && (
+          <>
+       <div className="-mx-6 mt-5 overflow-auto flex-1">
             {cartItems.map((item) => (
             <div key={item.id} className="mb-2">
               <CartDrawerItem
@@ -67,6 +95,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ className
                 }
                 name={item.name}
                 price={item.price}
+                disabled={item.disabled}
                 quantity={item.quantity}
                 onClickCountButton={(type) => onClickCountButton(item.id, item.quantity, type)}
                 onClickRemove={() => removeCartItem(item.id)}
@@ -93,6 +122,9 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ className
             </Link>
           </div>
         </SheetFooter>
+       </>
+        )}
+      </div>
       </SheetContent>
     </Sheet>
   );
