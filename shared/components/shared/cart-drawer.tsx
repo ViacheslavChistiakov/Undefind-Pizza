@@ -20,24 +20,13 @@ import { useCartStore } from '@/shared/store';
 import { PizzaSize, PizzaType } from '@/shared/constants/pizza';
 import { Title } from './title';
 import { cn } from '@/shared/lib/utils';
+import { useCart } from '@/app/hooks';
 
-type Props = {
-  className?: string;
-};
 
-export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ className, children }) => {
-  const [totalAmount, fetchCartItems, cartItems, removeCartItem, updateItemsQuantity] =
-    useCartStore((state) => [
-      state.totalAmount,
-      state.fetchCartItems,
-      state.cartItems,
-      state.removeCartItem,
-      state.updateItemsQuantity,
-    ]);
 
-  React.useEffect(() => {
-    fetchCartItems();
-  }, []);
+export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
+ const { totalAmount, updateItemsQuantity, cartItems, removeCartItem } = useCart();
+ const [redirect, setRedirect] = React.useState(false);
 
   const onClickCountButton = (id: number, quanity: number, type: 'plus' | 'minus') => {
     const newQuantity = type === 'plus' ? quanity + 1 : quanity - 1;
@@ -85,13 +74,11 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ className
                 id={item.id}
                 imageUrl={item.imageUrl}
                 details={
-                  item.pizzaSize && item.pizzaType
-                    ? getCartItemDetails(
-                        item.ingredients,
-                        item.pizzaType as PizzaType,
-                        item.pizzaSize as PizzaSize,
-                      )
-                    : ''
+                  getCartItemDetails(
+                    item.ingredients,
+                    item.pizzaType as PizzaType,
+                    item.pizzaSize as PizzaSize,
+                  )
                 }
                 name={item.name}
                 price={item.price}
@@ -114,8 +101,8 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ className
               </span>
               <span className="font-bold text-lg">{totalAmount}$</span>
             </div>
-            <Link href="./cart">
-              <Button type="submit" className="w-full h-12 text-base">
+            <Link href="./checkout">
+              <Button onClick={() => setRedirect(true)} loading={redirect} type="submit" className="w-full h-12 text-base">
                 Place an order
                 <ArrowRight className="w-5 ml-2" />
               </Button>
