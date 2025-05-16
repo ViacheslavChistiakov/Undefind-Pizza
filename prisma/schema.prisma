@@ -129,13 +129,13 @@ model Order {
 
     token  String
 
-    totalAmount String
+    totalAmount Int
     status  OrderStatus
     paymentId String?
     items Json
 
     fullName  String
-    addres  String
+    address  String
     email String
     phone String
     comment String?

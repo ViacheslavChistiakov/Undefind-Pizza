@@ -4,7 +4,7 @@ import React from 'react'
 
 interface Props {
     title?: string,
-    value?: string,
+    value?: React.ReactNode,
     icone?: React.ReactNode,
     className?: string
 }

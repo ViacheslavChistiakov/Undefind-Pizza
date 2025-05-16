@@ -1,63 +1,79 @@
 'use client';
 
+import { createOrder } from '@/app/actions';
 import { useCart } from '@/app/hooks';
-import { CheckoutItem, CheckoutSidebar, Container, Title, WhiteBlock } from '@/shared/components/shared';
-import { Input, Textarea } from '@/shared/components/ui';
-import { PizzaSize, PizzaType } from '@/shared/constants/pizza';
-import { getCartItemDetails } from '@/shared/lib';
-
-
-
+import { CheckoutSidebar, Container, Title } from '@/shared/components/shared';
+import {
+  CheckoutCart,
+  CheckoutData,
+  CheckoutDelivery,
+  checkoutFormSchema,
+} from '@/shared/components/shared/checkout';
+import { TypeCheckoutFormValues } from '@/shared/constants/checkout-form-schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
+import { useForm, FormProvider } from 'react-hook-form';
+import toast from 'react-hot-toast';
 
 export default function CheckoutPage() {
-  const { totalAmount, updateItemsQuantity, cartItems, removeCartItem } = useCart();
+  const [submitting, setSubmitting] = React.useState(false);
+  const { totalAmount, updateItemsQuantity, cartItems, removeCartItem, loading } = useCart();
+
+  const onSubmit = async (data: TypeCheckoutFormValues) => {
+    try {
+      setSubmitting(true);
+      const url = await createOrder(data);
+      toast.error("Order has been created", {
+        icon: '✅',
+      });
+      if (url) {
+        location.href = url;
+      }
+    } catch (error) {
+      console.log(error);
+      setSubmitting(false);
+      toast.error("Error creating order", {
+        icon: '❌',
+      });
+    } 
+  };
+
+  const form = useForm<TypeCheckoutFormValues>({
+    resolver: zodResolver(checkoutFormSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      address: '',
+      comment: '',
+    },
+  });
 
   return (
     <Container className="mt-10">
       <Title text="Checkout" className="font-extrabold mb-8 text-[36px]" />
-      <div className="flex gap-10">
-        {/* Left Side */}
-        <div className="flex flex-col gap-10  flex-1 mb-20">
-          <WhiteBlock title="1. Card">
-            <div className="flex flex-col gap-5">
-              {cartItems.map((item) => (
-                <CheckoutItem
-                  key={item.id}
-                  details={getCartItemDetails(
-                    item.ingredients,
-                    item.pizzaType as PizzaType,
-                    item.pizzaSize as PizzaSize,
-                  )}
-                  {...item}
-                  onClickCountButton={(type) => {
-                    const newQuantity = type === 'plus' ? item.quantity + 1 : item.quantity - 1;
-                    updateItemsQuantity(item.id, newQuantity);
-                  }}
-                  onClickRemove={() => removeCartItem(item.id)}
-                />
-              ))}
+      <FormProvider {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex gap-10">
+            {/* Left Side */}
+            <div className="flex flex-col gap-10  flex-1 mb-20">
+              <CheckoutCart
+                cartItems={cartItems}
+                updateItemsQuantity={updateItemsQuantity}
+                removeCartItem={removeCartItem}
+                loading={loading}
+              />
+              <CheckoutData className={loading ? "opacity-40 pointer-events-none" : ""} />
+              <CheckoutDelivery className={loading ? "opacity-40 pointer-events-none" : ""} />
             </div>
-          </WhiteBlock>
-          <WhiteBlock title="2. Personal Data">
-            <div className="grid grid-cols-2 gap-5">
-              <Input name="firstName" className="text-base" placeholder="Name" />
-              <Input name="lastName" className="text-base" placeholder="Lastname" />
-              <Input name="email" className="text-base" placeholder="E-mail" />
-              <Input name="phone" className="text-base" placeholder="Phone" />
+            {/* Right Side */}
+            <div className="w-[450px]">
+              <CheckoutSidebar totalAmount={totalAmount}  loading={loading || submitting}/>
             </div>
-          </WhiteBlock>
-          <WhiteBlock title="3. Delivery Address">
-            <div className="flex flex-col gap-5">
-              <Input name="Address" className="text-base" placeholder="Type your address..." />
-              <Textarea placeholder="Comment for order" className="text-base" rows={5} />
-            </div>
-          </WhiteBlock>
-        </div>
-        {/* Right Side */}
-        <div className="w-[450px]">
-              <CheckoutSidebar totalAmount={totalAmount}  />
-        </div>
-      </div>
+          </div>
+        </form>
+      </FormProvider>
     </Container>
   );
 }
